@@ -16,6 +16,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
@@ -30,6 +31,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * @author Francisco Fernández Sobejano
@@ -37,13 +40,13 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
  */
 
 @Entity
+@JsonPropertyOrder({ "id", "username", "novels", "progress", "createDateTime" })
 public class User implements UserDetails{
 
 	private static final long serialVersionUID = -1191480646225681093L;
 
-	@JsonIgnore
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 	
@@ -51,20 +54,21 @@ public class User implements UserDetails{
 	@Size(min = 3, max = 20)
 	private String username;
 	
-	@JsonIgnore
 	@NotNull
 	private LocalDate birthdate;
 	
 	@JsonIgnore
 	private String email;
 	
+	private String avatar;
+	
 	//Owned novels
-	@JsonManagedReference
+	@JsonManagedReference(value="user-novels")
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Novel> novels = new HashSet<Novel>();
 	
 	//Read novels
-	@JsonManagedReference
+	@JsonManagedReference(value="user-progress")
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<UserNovel> progress = new HashSet<UserNovel>();
 	
@@ -82,15 +86,16 @@ public class User implements UserDetails{
 	protected User() {
 	}
 
-	public User(String username, LocalDate birthdate, String email, String role) {
+	public User(String username, LocalDate birthdate, String email, String role, String password) {
 		this.username = username;
 		this.birthdate = birthdate;
 		this.email = email;
 		this.role = role;
+		this.setPassword(password);
 	}
 
 	public User(String userName) {
-		this(userName, LocalDate.now().minusYears(18), "test@test.com", "ROLE_USER");
+		this(userName, LocalDate.now().minusYears(18), "test@test.com", "ROLE_USER", "aaaaaa");
 	}
 	
 	public void setId(Long id) {
@@ -106,6 +111,21 @@ public class User implements UserDetails{
 	}
 	
 	
+	/**
+	 * @return the birthdate
+	 */
+	public LocalDate getBirthdate() {
+		return birthdate;
+	}
+
+	/**
+	 * @param birthdate the birthdate to set
+	 */
+	public void setBirthdate(LocalDate birthdate) {
+		this.birthdate = birthdate;
+	}
+
+	@JsonProperty
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -124,6 +144,7 @@ public class User implements UserDetails{
 		
 	}
 
+	@JsonIgnore
 	@Override
 	public String getPassword() {
 		return password;
@@ -158,13 +179,29 @@ public class User implements UserDetails{
 		return true;
 	}
 
+	@JsonIgnore
 	public String getEmail() {
 		return email;
 	}
 
+	@JsonProperty
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	/**
+	 * @return the avatar
+	 */
+	public String getAvatar() {
+		return avatar;
+	}
+
+	/**
+	 * @param avatar the avatar to set
+	 */
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
 	/**
 	 * @return the ownedNovels
 	 */
@@ -183,10 +220,12 @@ public class User implements UserDetails{
 		this.novels.remove(novel);
 	}
 
+	@JsonIgnore
 	public String getRole() {
 		return role;
 	}
 
+	@JsonProperty
 	public void setRole(String role) {
 		this.role = role;
 	}

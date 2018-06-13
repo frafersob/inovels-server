@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -28,7 +29,7 @@ import javax.validation.constraints.NotNull;
 public class Image{
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 	
@@ -56,6 +57,15 @@ public class Image{
 	private int offsetY;
 	
 	protected Image() {}
+	
+	public Image (String src, int sizeX, int sizeY, int offsetX, int offsetY) {
+		this.user = null;
+		this.src = src;
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		this.offsetX = offsetX;
+		this.offsetY = offsetY;
+	}
 	
 	public Image (User user, String src, int sizeX, int sizeY, int offsetX, int offsetY) {
 		this.user = user;

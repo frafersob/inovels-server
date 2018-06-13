@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -27,18 +28,19 @@ import javax.validation.constraints.Size;
 
 @Entity
 public class Scene{
+
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	//Novel that contains the scene
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="novel_id", updatable = false, nullable = false)
 	private Novel novel;
 	
 	//Images contained in the scene
 	//The first image is the background
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.ALL})
 	@JoinTable(
 			name = "Image_Scene",
 			joinColumns = @JoinColumn(name="scene_id"),
@@ -51,6 +53,32 @@ public class Scene{
 	
 	@Size(max = 20)
 	private String answer;
+	
+	protected Scene() { }
+	
+	/**
+	 * @param novel
+	 */
+	public Scene(Novel novel) {
+		this.novel = novel;
+		this.images.add(new Image("../assets/defaultBackground.jpg", 800, 400, 0, 0));
+		this.text = "Default text";
+		this.answer = "";
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the images

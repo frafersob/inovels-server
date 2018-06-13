@@ -1,5 +1,6 @@
 package es.uca.inovels;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,25 +24,52 @@ import org.springframework.core.convert.converter.ConverterRegistry;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import es.uca.inovels.model.Novel;
+import es.uca.inovels.model.Scene;
 import es.uca.inovels.model.User;
 import es.uca.inovels.model.UserNovel;
 import es.uca.inovels.services.NovelService;
+import es.uca.inovels.services.SceneService;
 import es.uca.inovels.services.UserNovelService;
 import es.uca.inovels.services.UserService;
 
 @SpringBootApplication
+@RestController
 public class InteractivenovelsApplication{
 	
 	private static final Logger log = LoggerFactory.getLogger(InteractivenovelsApplication.class);
 	
+	//Prevents issues with Cross Origin Requests
+	@Bean
+    public CorsFilter corsFilter() {
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        final CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("OPTIONS");
+        config.addAllowedMethod("HEAD");
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("PATCH");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
+	
 	@Bean
 	public CommandLineRunner loadData(UserService uService, NovelService nService,
-			UserNovelService unService) {
+			UserNovelService unService, SceneService sService) {
 		return (args) -> {
 			if (uService.findAll().size() == 0) {
 				//We create a root user with password root
@@ -67,6 +95,17 @@ public class InteractivenovelsApplication{
 				
 				unService.save(progress);
 				unService.save(progress2);
+				
+				Scene scene = new Scene(test);
+				sService.save(scene);
+				Scene scene2 = new Scene(test);
+				scene2.setText("Text of Scene 2");
+				sService.save(scene2);
+				
+				test.addScene(scene);
+				test.addScene(scene2);
+				
+				nService.save(test);
 				
 				
 				/*uService.save(root);

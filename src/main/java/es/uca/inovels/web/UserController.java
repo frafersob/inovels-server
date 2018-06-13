@@ -15,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import es.uca.inovels.model.User;
 import es.uca.inovels.repositories.UserRepository;
+import es.uca.inovels.services.UserService;
 
 /**
  * @author Francisco Fernández Sobejano
@@ -26,6 +27,9 @@ public class UserController {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	UserService userService;
 
 	@GetMapping("/api/users")
 	public List<User> getAllUsers() {
@@ -39,9 +43,19 @@ public class UserController {
 		return user.get();
 	}
 	
+	@GetMapping("/api/userByName/{name}")
+	public User getUser(@PathVariable String name) {
+		return userRepository.findByUsername(name);
+	}
+	
+	@RequestMapping(value="/api/signup", method = RequestMethod.POST)
+	public User saveUser(@RequestBody User user){
+		return userRepository.save(user);
+	}
+	
 	@PostMapping("/api/users")
 	public ResponseEntity<Object> createUser(@RequestBody User user) {
-		User savedUser = userRepository.save(user);
+		User savedUser = userService.save(user);
 
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(savedUser.getId()).toUri();

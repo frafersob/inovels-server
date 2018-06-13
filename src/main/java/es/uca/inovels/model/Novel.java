@@ -14,6 +14,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -39,7 +40,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Novel {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 	
@@ -54,11 +55,11 @@ public class Novel {
 	private String image;
 	
 	//Scenes of the novel
-	@OneToMany(mappedBy = "novel", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "novel", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Scene> scenes;
 	
 	//Owner of the novel
-	@JsonBackReference
+	@JsonBackReference(value="user-novels")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="user_id")
 	private User user;
@@ -77,7 +78,7 @@ public class Novel {
 		this.user = user;
 		this.name = name;
 		this.description = description;
-		this.image = "/assets/image.jpg";
+		this.image = "/assets/novelpage.jpg";
 	}
 
 	/**
@@ -127,6 +128,14 @@ public class Novel {
 	 */
 	public List<Scene> getScenes() {
 		return scenes;
+	}
+	
+	public void addScene(Scene scene) {
+		this.scenes.add(scene);
+	}
+	
+	public void removeScene(Scene scene) {
+		this.scenes.remove(scene);
 	}
 
 	/**

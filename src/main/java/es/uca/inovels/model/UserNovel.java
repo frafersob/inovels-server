@@ -14,6 +14,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -44,16 +45,16 @@ public class UserNovel{
 	 */
 	@JsonIgnore
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 	
-	@JsonBackReference
+	@JsonBackReference(value = "user-progress")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="user_id", updatable = false, nullable = false)
 	private User user;
 	
-	@JsonBackReference
+	@JsonBackReference(value = "novels-progress")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="novel_id", updatable = false, nullable = false)
 	private Novel novel;

@@ -23,5 +23,5 @@ public interface NovelRepository extends JpaRepository<Novel, Long>{
 	 * @return A novel with that name
 	 */
 	Novel findByName(String novelname);
-	
+		
 }
