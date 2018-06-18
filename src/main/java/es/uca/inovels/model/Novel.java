@@ -4,11 +4,13 @@
  */
 package es.uca.inovels.model;
 
+import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,8 +19,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -36,7 +40,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  */
 
 @Entity
-@JsonPropertyOrder({ "id", "name", "description", "user", "scenes" })
+@JsonPropertyOrder({ "id", "name", "description", "user", "image", "scenes" })
 public class Novel {
 	
 	@Id
@@ -51,15 +55,17 @@ public class Novel {
 	@Size(max = 200)
 	private String description;
 	
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	@JoinColumn(name="image_id")
 	@NotNull
-	private String image;
+	private Image image;
 	
 	//Scenes of the novel
 	@OneToMany(mappedBy = "novel", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Scene> scenes;
 	
 	//Owner of the novel
-	@JsonBackReference(value="user-novels")
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="user_id")
 	private User user;
@@ -77,8 +83,8 @@ public class Novel {
 	public Novel (User user, String name, String description) {
 		this.user = user;
 		this.name = name;
-		this.description = description;
-		this.image = "/assets/novelpage.jpg";
+		this.image = new Image (Constants.DEFAULT_NOVEL, "defaultNovel.jpg", "image/jpg", 400, 225);
+		this.description = description;;
 	}
 
 	/**
@@ -112,14 +118,14 @@ public class Novel {
 	/**
 	 * @return the image
 	 */
-	public String getImage() {
+	public Image getImage() {
 		return image;
 	}
 
 	/**
 	 * @param image the image to set
 	 */
-	public void setImage(String image) {
+	public void setImage(Image image) {
 		this.image = image;
 	}
 

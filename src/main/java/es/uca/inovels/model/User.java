@@ -18,7 +18,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -60,10 +63,13 @@ public class User implements UserDetails{
 	@JsonIgnore
 	private String email;
 	
-	private String avatar;
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	@JoinColumn(name="image_id")
+	@NotNull
+	private Image avatar;
 	
 	//Owned novels
-	@JsonManagedReference(value="user-novels")
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Novel> novels = new HashSet<Novel>();
 	
@@ -89,6 +95,7 @@ public class User implements UserDetails{
 	public User(String username, LocalDate birthdate, String email, String role, String password) {
 		this.username = username;
 		this.birthdate = birthdate;
+		this.avatar = new Image (Constants.DEFAULT_USER, "defaultAvatar.jpg", "image/jpg", 400, 400);
 		this.email = email;
 		this.role = role;
 		this.setPassword(password);
@@ -191,14 +198,14 @@ public class User implements UserDetails{
 	/**
 	 * @return the avatar
 	 */
-	public String getAvatar() {
+	public Image getAvatar() {
 		return avatar;
 	}
 
 	/**
 	 * @param avatar the avatar to set
 	 */
-	public void setAvatar(String avatar) {
+	public void setAvatar(Image avatar) {
 		this.avatar = avatar;
 	}
 

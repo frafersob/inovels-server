@@ -68,8 +68,8 @@ public class UserController {
 		Optional<User> userOptional = userRepository.findById(id);
 		if (!userOptional.isPresent())
 			return ResponseEntity.notFound().build();
-		user.setId(id);
-		userRepository.save(user);
+		userOptional.get().setAvatar(user.getAvatar());
+		userRepository.save(userOptional.get());
 		return ResponseEntity.noContent().build();
 	}
 	

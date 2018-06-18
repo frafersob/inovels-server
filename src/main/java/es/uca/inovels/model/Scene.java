@@ -61,7 +61,7 @@ public class Scene{
 	 */
 	public Scene(Novel novel) {
 		this.novel = novel;
-		this.images.add(new Image("../assets/defaultBackground.jpg", 800, 400, 0, 0));
+		this.images.add(new Image (Constants.DEFAULT_SCENE, "defaultScene.jpg", "image/jpg", 800, 400));
 		this.text = "Default text";
 		this.answer = "";
 	}

@@ -7,6 +7,7 @@ package es.uca.inovels.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,11 +15,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.util.Base64Utils;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author Francisco Fernández Sobejano
@@ -27,18 +34,26 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class Image{
-	
+		
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
 	
-	@NotEmpty
-	private String src;
+	@NotNull
+	private String name;
+	
+	@Lob
+	@Basic(fetch = FetchType.EAGER)
+	private byte[] src;
+	
+	@NotNull
+	private String extension;
 	
 	@NotNull
 	@Min(value = 1)
@@ -58,8 +73,21 @@ public class Image{
 	
 	protected Image() {}
 	
-	public Image (String src, int sizeX, int sizeY, int offsetX, int offsetY) {
+	public Image (byte[] src, int sizeX, int sizeY, int offsetX, int offsetY) {
 		this.user = null;
+		this.src = src;
+		this.name = "defaultimage";
+		this.extension = "image/jpeg";
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		this.offsetX = offsetX;
+		this.offsetY = offsetY;
+	}
+	
+	public Image (User user, byte[] src, int sizeX, int sizeY, int offsetX, int offsetY) {
+		this.user = user;
+		this.name = "defaultimage";
+		this.extension = "image/jpeg";
 		this.src = src;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
@@ -67,13 +95,15 @@ public class Image{
 		this.offsetY = offsetY;
 	}
 	
-	public Image (User user, String src, int sizeX, int sizeY, int offsetX, int offsetY) {
-		this.user = user;
-		this.src = src;
+	public Image (String src, String name, String extension, int sizeX, int sizeY) {
+		this.user = null;
+		this.src = Base64Utils.decodeFromString(src);
+		this.name = name;
+		this.extension = extension;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
-		this.offsetX = offsetX;
-		this.offsetY = offsetY;
+		this.offsetX = 0;
+		this.offsetY = 0;
 	}
 	
 	/**
@@ -84,6 +114,20 @@ public class Image{
 	}
 
 	/**
+	 * @return the src
+	 */
+	public byte[] getSrc() {
+		return src;
+	}
+
+	/**
+	 * @param src the src to set
+	 */
+	public void setSrc(byte[] src) {
+		this.src = src;
+	}
+
+	/**
 	 * @return the user
 	 */
 	public User getUser() {
@@ -91,18 +135,33 @@ public class Image{
 	}
 
 	/**
-	 * @return the src
+	 * @return the name
 	 */
-	public String getSrc() {
-		return src;
+	public String getName() {
+		return name;
 	}
 
 	/**
-	 * @param src the src to set
+	 * @param name the name to set
 	 */
-	public void setSrc(String src) {
-		this.src = src;
+	public void setName(String name) {
+		this.name = name;
 	}
+
+	/**
+	 * @return the extension
+	 */
+	public String getExtension() {
+		return extension;
+	}
+
+	/**
+	 * @param extension the extension to set
+	 */
+	public void setExtension(String extension) {
+		this.extension = extension;
+	}
+
 
 	/**
 	 * @return the sizeX
