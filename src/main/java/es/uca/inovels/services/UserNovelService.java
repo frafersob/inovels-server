@@ -75,6 +75,10 @@ public class UserNovelService {
 			repo.save(progress.get());
 			userRepo.save(user);
 			novelRepo.save(novel);
+		} else {
+			repo.save(new UserNovel(user, novel));
+			userRepo.save(user);
+			novelRepo.save(novel);
 		}
 	}
 

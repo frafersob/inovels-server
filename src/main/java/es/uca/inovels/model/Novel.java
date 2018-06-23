@@ -23,6 +23,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -62,6 +63,7 @@ public class Novel {
 	
 	//Scenes of the novel
 	@OneToMany(mappedBy = "novel", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OrderBy("pageNumber ASC")
 	private List<Scene> scenes;
 	
 	//Owner of the novel

@@ -19,6 +19,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -38,15 +40,12 @@ public class Scene{
 	@JoinColumn(name="novel_id", updatable = false, nullable = false)
 	private Novel novel;
 	
-	//Images contained in the scene
-	//The first image is the background
-	@ManyToMany(cascade = {CascadeType.ALL})
-	@JoinTable(
-			name = "Image_Scene",
-			joinColumns = @JoinColumn(name="scene_id"),
-			inverseJoinColumns = @JoinColumn(name="image_id")
-			)
-	private List<Image> images = new ArrayList<>();
+	private int pageNumber;
+	
+	//Main image of the scene
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	@JoinColumn(name="image_id")
+	private Image image;
 	
 	@Size(max = 10000)
 	private String text;
@@ -61,7 +60,7 @@ public class Scene{
 	 */
 	public Scene(Novel novel) {
 		this.novel = novel;
-		this.images.add(new Image (Constants.DEFAULT_SCENE, "defaultScene.jpg", "image/jpg", 800, 400));
+		this.image = new Image (Constants.DEFAULT_SCENE, "defaultScene.jpg", "image/jpg", 800, 400);
 		this.text = "Default text";
 		this.answer = "";
 	}
@@ -81,10 +80,24 @@ public class Scene{
 	}
 
 	/**
+	 * @param novel the novel to set
+	 */
+	public void setNovel(Novel novel) {
+		this.novel = novel;
+	}
+
+	/**
 	 * @return the images
 	 */
-	public List<Image> getImages() {
-		return images;
+	public Image getImage() {
+		return image;
+	}
+	
+	/**
+	 * @param image the image to set
+	 */
+	public void setImage(Image image) {
+		this.image = image;
 	}
 
 	/**
@@ -113,6 +126,20 @@ public class Scene{
 	 */
 	public void setAnswer(String answer) {
 		this.answer = answer;
+	}
+
+	/**
+	 * @return the pageNumber
+	 */
+	public int getPageNumber() {
+		return pageNumber;
+	}
+
+	/**
+	 * @param pageNumber the pageNumber to set
+	 */
+	public void setPageNumber(int pageNumber) {
+		this.pageNumber = pageNumber;
 	}
 	
 }

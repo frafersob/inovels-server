@@ -22,6 +22,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -75,6 +76,7 @@ public class User implements UserDetails{
 	
 	//Read novels
 	@JsonManagedReference(value="user-progress")
+	@OrderBy("novelId ASC")
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<UserNovel> progress = new HashSet<UserNovel>();
 	
@@ -242,6 +244,13 @@ public class User implements UserDetails{
 	 */
 	public Set<UserNovel> getProgress() {
 		return progress;
+	}
+
+	/**
+	 * @param progress the progress to set
+	 */
+	public void setProgress(Set<UserNovel> progress) {
+		this.progress = progress;
 	}
 
 	/**

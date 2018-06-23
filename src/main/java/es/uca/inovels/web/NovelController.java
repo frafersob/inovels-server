@@ -54,8 +54,8 @@ public class NovelController {
 		Optional<Novel> novelOptional = novelRepository.findById(id);
 		if (!novelOptional.isPresent())
 			return ResponseEntity.notFound().build();
-		novel.setId(id);
-		novelRepository.save(novel);
+		novelOptional.get().setImage(novel.getImage());
+		novelRepository.save(novelOptional.get());
 		return ResponseEntity.noContent().build();
 	}
 	

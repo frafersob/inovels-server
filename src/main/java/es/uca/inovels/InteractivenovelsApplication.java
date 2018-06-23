@@ -88,6 +88,7 @@ public class InteractivenovelsApplication{
 				nService.save(test2);
 				
 				test = nService.loadNovelByName("Test Novel");
+				test2 = nService.loadNovelByName("Test Novel 2");
 								
 				UserNovel progress = new UserNovel(root, test);
 				UserNovel progress2 = new UserNovel(root, test2);
@@ -102,11 +103,16 @@ public class InteractivenovelsApplication{
 				scene2.setText("Text of Scene 2");
 				sService.save(scene2);
 				
+				Scene scene3 = new Scene(test2);
+				sService.save(scene3);
+				
+				
 				test.addScene(scene);
 				test.addScene(scene2);
+				test2.addScene(scene3);
 				
 				nService.save(test);
-				
+				nService.save(test2);
 				
 				/*uService.save(root);
 				nService.save(test);

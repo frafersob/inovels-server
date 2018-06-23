@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import es.uca.inovels.model.Constants;
+import es.uca.inovels.model.Image;
 import es.uca.inovels.model.Novel;
 import es.uca.inovels.model.Scene;
 import es.uca.inovels.repositories.NovelRepository;
@@ -50,6 +52,9 @@ public class SceneController {
 	
 	@PostMapping("/api/scenes")
 	public ResponseEntity<Object> createScene(@RequestBody Scene scene) {
+		if (scene.getImage() == null) {
+			scene.setImage(new Image (Constants.DEFAULT_SCENE, "defaultScene.jpg", "image/jpg", 800, 400));
+		}
 		Scene savedScene = sceneRepository.save(scene);
 
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -63,8 +68,10 @@ public class SceneController {
 		Optional<Scene> sceneOptional = sceneRepository.findById(id);
 		if (!sceneOptional.isPresent())
 			return ResponseEntity.notFound().build();
-		scene.setId(id);
-		sceneRepository.save(scene);
+		sceneOptional.get().setImage(scene.getImage());
+		sceneOptional.get().setText(scene.getText());
+		sceneOptional.get().setAnswer(scene.getAnswer());
+		sceneRepository.save(sceneOptional.get());
 		return ResponseEntity.noContent().build();
 	}
 	

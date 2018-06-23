@@ -59,6 +59,10 @@ public class UserNovel{
 	@JoinColumn(name="novel_id", updatable = false, nullable = false)
 	private Novel novel;
 	
+	//Used to return novel id through the JSON backreference
+	@Column(name = "novelNumber")
+	private Long novelId;
+	
 	//Page represents the progress of the user for a specific novel	
 	@Column
 	@Min(value = 1)
@@ -69,6 +73,7 @@ public class UserNovel{
 	public UserNovel(User user, Novel novel) {
 		this.user = user;
 		this.novel = novel;
+		this.novelId = novel.getId();
 		this.page = 1;
 	}
 	
@@ -77,6 +82,20 @@ public class UserNovel{
 	 */
 	public Long getId() {
 		return id;
+	}
+
+	/**
+	 * @return the novelId
+	 */
+	public Long getNovelId() {
+		return novelId;
+	}
+
+	/**
+	 * @param novelId the novelId to set
+	 */
+	public void setNovelId(Long novelId) {
+		this.novelId = novelId;
 	}
 
 	/**
