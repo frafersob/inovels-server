@@ -78,11 +78,16 @@ public class InteractivenovelsApplication{
 				root.setRole("ROLE_ADMIN");
 				uService.save(root);
 				
+				User user = new User("user");
+				user.setPassword("user");
+				user.setRole("ROLE_USER");
+				uService.save(user);
+				
 				root = uService.loadUserByUsername("root");
 				
 				Novel test = new Novel(root, "Test Novel", "Description of test novel");
 				
-				Novel test2 = new Novel(root, "Test Novel 2", "Description of test novel 2");
+				Novel test2 = new Novel(user, "Test Novel 2", "Description of test novel 2");
 
 				nService.save(test);
 				nService.save(test2);
@@ -91,7 +96,7 @@ public class InteractivenovelsApplication{
 				test2 = nService.loadNovelByName("Test Novel 2");
 								
 				UserNovel progress = new UserNovel(root, test);
-				UserNovel progress2 = new UserNovel(root, test2);
+				UserNovel progress2 = new UserNovel(user, test2);
 
 				
 				unService.save(progress);

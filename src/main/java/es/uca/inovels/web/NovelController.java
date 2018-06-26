@@ -39,6 +39,13 @@ public class NovelController {
 		return novel.get();
 	}
 	
+	@GetMapping("/api/novelsByIds/{ids}")
+	public List<Novel> getNovelsByIds(@PathVariable List<Long> ids) {
+		Optional<List<Novel>> novels = novelRepository.findByIdIn(ids);
+		if(!novels.isPresent()) return null;
+		return novels.get();
+	}
+	
 	@PostMapping("/api/novels")
 	public ResponseEntity<Object> createNovel(@RequestBody Novel novel) {
 		Novel savedNovel = novelRepository.save(novel);
@@ -54,7 +61,9 @@ public class NovelController {
 		Optional<Novel> novelOptional = novelRepository.findById(id);
 		if (!novelOptional.isPresent())
 			return ResponseEntity.notFound().build();
+		novelOptional.get().setName(novel.getName());
 		novelOptional.get().setImage(novel.getImage());
+		novelOptional.get().setDescription(novel.getDescription());
 		novelRepository.save(novelOptional.get());
 		return ResponseEntity.noContent().build();
 	}
