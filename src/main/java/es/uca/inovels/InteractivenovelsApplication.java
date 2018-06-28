@@ -72,22 +72,23 @@ public class InteractivenovelsApplication{
 			UserNovelService unService, SceneService sService) {
 		return (args) -> {
 			if (uService.findAll().size() == 0) {
+				
 				//We create a root user with password root
-				User root = new User("root");
+				User root = new User("root", "ROLE_ADMIN");
 				root.setPassword("root");
 				root.setRole("ROLE_ADMIN");
 				uService.save(root);
 				
-				User user = new User("user");
+				User user = new User("user", "ROLE_USER");
 				user.setPassword("user");
 				user.setRole("ROLE_USER");
 				uService.save(user);
 				
 				root = uService.loadUserByUsername("root");
 				
-				Novel test = new Novel(root, "Test Novel", "Description of test novel");
+				Novel test = new Novel(root, "Test Novel", "Description of test novel", "es", "15-18");
 				
-				Novel test2 = new Novel(user, "Test Novel 2", "Description of test novel 2");
+				Novel test2 = new Novel(user, "Test Novel 2", "Description of test novel 2", "es", "15-18");
 
 				nService.save(test);
 				nService.save(test2);
@@ -126,7 +127,7 @@ public class InteractivenovelsApplication{
 				System.out.println("User: " + unService.loadUserNovelByUser(root).get(0).getPage());
 				System.out.println("Novel: " + unService.loadUserNovelByNovel(test).get(0).getPage());
 				System.out.println("Both: " + unService.findOne(root, test).get().getPage());
-				/*
+				
 				progress.turnPage();
 				
 				unService.save(progress);

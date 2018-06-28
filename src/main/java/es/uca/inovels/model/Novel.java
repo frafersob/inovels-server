@@ -49,13 +49,24 @@ public class Novel {
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 	
+	//The name of the novel
 	@NotNull
-	@Size(min = 3, max = 20)
+	@Size(min = 3, max = 25)
 	private String name;
 	
+	//The description of the novel
 	@Size(max = 200)
 	private String description;
 	
+	//The language of the novel
+	@Size(max = 2)
+	private String language;
+	
+	//The age range of the novel
+	@Size(max = 5)
+	private String agerange;
+
+	//The main image of the novel
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	@JoinColumn(name="image_id")
 	@NotNull
@@ -67,7 +78,6 @@ public class Novel {
 	private List<Scene> scenes;
 	
 	//Owner of the novel
-
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="user_id")
 	private User user;
@@ -82,11 +92,13 @@ public class Novel {
 
 	protected Novel() { }
 	
-	public Novel (User user, String name, String description) {
+	public Novel (User user, String name, String description, String language, String agerange) {
 		this.user = user;
 		this.name = name;
 		this.image = new Image (Constants.DEFAULT_NOVEL, "defaultNovel.jpg", "image/jpg", 400, 225);
-		this.description = description;;
+		this.description = description;
+		this.language = language;
+		this.agerange = agerange;
 	}
 
 	/**
@@ -115,6 +127,34 @@ public class Novel {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	/**
+	 * @return the language
+	 */
+	public String getLanguage() {
+		return language;
+	}
+
+	/**
+	 * @param language the language to set
+	 */
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	/**
+	 * @return the agerange
+	 */
+	public String getAgerange() {
+		return agerange;
+	}
+
+	/**
+	 * @param agerange the agerange to set
+	 */
+	public void setAgerange(String agerange) {
+		this.agerange = agerange;
 	}
 
 	/**

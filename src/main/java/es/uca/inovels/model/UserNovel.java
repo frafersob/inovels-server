@@ -49,6 +49,7 @@ public class UserNovel{
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 	
+	//User that reads the novel
 	@JsonBackReference(value = "user-progress")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="user_id", updatable = false, nullable = false)

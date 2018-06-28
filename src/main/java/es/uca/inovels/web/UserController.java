@@ -29,6 +29,7 @@ import es.uca.inovels.services.UserService;
  *
  */
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class UserController {
 	
@@ -58,7 +59,7 @@ public class UserController {
 		if(!user.isPresent()) return null;
 		return user.get();
 	}
-	
+	@CrossOrigin(origins = "*", maxAge = 3600)
 	@GetMapping("/api/userByName/{name}")
 	public User getUser(@PathVariable String name) {
 		return userRepository.findByUsername(name);

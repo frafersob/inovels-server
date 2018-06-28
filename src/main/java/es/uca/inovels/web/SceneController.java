@@ -25,6 +25,7 @@ import es.uca.inovels.repositories.SceneRepository;
  *
  */
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class SceneController {
 	
@@ -53,7 +54,7 @@ public class SceneController {
 	@PostMapping("/api/scenes")
 	public ResponseEntity<Object> createScene(@RequestBody Scene scene) {
 		if (scene.getImage() == null) {
-			scene.setImage(new Image (Constants.DEFAULT_SCENE, "defaultScene.jpg", "image/jpg", 800, 400));
+			scene.setImage(new Image (Constants.DEFAULT_SCENE, "defaultScene.gif", "image/gif", 800, 1));
 		}
 		Scene savedScene = sceneRepository.save(scene);
 

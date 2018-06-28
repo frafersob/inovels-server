@@ -60,7 +60,7 @@ public class Scene{
 	 */
 	public Scene(Novel novel) {
 		this.novel = novel;
-		this.image = new Image (Constants.DEFAULT_SCENE, "defaultScene.jpg", "image/jpg", 800, 400);
+		this.image = new Image (Constants.DEFAULT_SCENE, "defaultScene.gif", "image/gif", 800, 1);
 		this.text = "Default text";
 		this.answer = "";
 	}

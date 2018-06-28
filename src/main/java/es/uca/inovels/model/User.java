@@ -97,14 +97,18 @@ public class User implements UserDetails{
 	public User(String username, LocalDate birthdate, String email, String role, String password) {
 		this.username = username;
 		this.birthdate = birthdate;
-		this.avatar = new Image (Constants.DEFAULT_USER, "defaultAvatar.jpg", "image/jpg", 400, 400);
+		if(role == "ROLE_ADMIN") {
+			this.avatar = new Image (Constants.STIMEY_USER, "stimeyAvatar.png", "image/png", 248, 250);
+		} else {
+			this.avatar = new Image (Constants.DEFAULT_USER, "defaultAvatar.jpg", "image/jpg", 400, 400);
+		}
 		this.email = email;
 		this.role = role;
 		this.setPassword(password);
 	}
 
-	public User(String userName) {
-		this(userName, LocalDate.now().minusYears(18), "test@test.com", "ROLE_USER", "aaaaaa");
+	public User(String userName, String role) {
+		this(userName, LocalDate.now().minusYears(18), "test@test.com", role, "aaaaaa");
 	}
 	
 	public void setId(Long id) {

@@ -1,5 +1,7 @@
 package es.uca.inovels.web;
 
+import java.util.Arrays;
+
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ import org.springframework.security.data.repository.query.SecurityEvaluationCont
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import es.uca.inovels.web.JwtAuthenticationEntryPoint;
 
@@ -66,7 +71,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 		.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
     }
-    
 
     @Bean
     public PasswordEncoder passwordEncoder(){

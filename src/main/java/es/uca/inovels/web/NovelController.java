@@ -21,6 +21,7 @@ import es.uca.inovels.repositories.NovelRepository;
  *
  */
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class NovelController {
 	
@@ -64,6 +65,8 @@ public class NovelController {
 		novelOptional.get().setName(novel.getName());
 		novelOptional.get().setImage(novel.getImage());
 		novelOptional.get().setDescription(novel.getDescription());
+		novelOptional.get().setAgerange(novel.getAgerange());
+		novelOptional.get().setLanguage(novel.getLanguage());
 		novelRepository.save(novelOptional.get());
 		return ResponseEntity.noContent().build();
 	}
