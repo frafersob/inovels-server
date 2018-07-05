@@ -71,6 +71,7 @@ public class InteractivenovelsApplication{
 	public CommandLineRunner loadData(UserService uService, NovelService nService,
 			UserNovelService unService, SceneService sService) {
 		return (args) -> {
+			//Only for initial setup
 			if (uService.findAll().size() == 0) {
 				
 				//We create a root user with password root
